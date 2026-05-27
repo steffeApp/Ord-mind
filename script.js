@@ -65,7 +65,10 @@ function createKeyboard() {
         btn.classList.add("wide");
       }
 
-      btn.onclick = () => handleKey(letter);
+      btn.addEventListener("pointerdown", (e) => {
+  e.preventDefault(); // Hindrar iOS från att tolka snabba tryck som en gest eller svälja klicket
+  handleKey(letter);
+});
 
       btn.id = "key-" + letter;
 
