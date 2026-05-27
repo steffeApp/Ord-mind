@@ -1,98 +1,122 @@
+let invalidWord = false;
+
 let words = [];
 let targetWord = "";
 let currentRow = 0;
+let currentGuess = [];
 
-const maxRows = 5;
+const maxRows = 6;
+const board = document.getElementById("board");
+const keyboard = document.getElementById("keyboard");
+const guessBtn = document.getElementById("guessBtn");
 
 let streak =
   Number(localStorage.getItem("streak")) || 0;
 
-const board =
-  document.getElementById("board");
-
-const input =
-  document.getElementById("guessInput");
-
-document
-  .getElementById("guessBtn")
-  .addEventListener("click", submitGuess);
-
-document
-  .getElementById("newBtn")
-  .addEventListener("click", newGame);
-
-input.addEventListener("keydown", e => {
-  if (e.key === "Enter") submitGuess();
-});
+const keyboardLayout = [
+  ["Q","W","E","R","T","Y","U","I","O","P","Å"],
+  ["A","S","D","F","G","H","J","K","L","Ö","Ä"],
+  ["Z","X","C","V","B","N","M","⌫"]
+];
 
 async function loadWords() {
-  const response = await fetch("words.txt");
+  const response = await fetch("answers.txt");
   const text = await response.text();
 
   words = text
     .split("\n")
-
-    // ta första delen före /  ex: "abort/5" -> "abort"
-    .map(word => word.trim().split("/")[0])
-
-    // stora bokstäver
-    .map(word => word.toUpperCase())
-
-    // exakt 5 bokstäver
-    .filter(word => word.length === 5)
-
-    // bara svenska bokstäver A-Z ÅÄÖ
-    .filter(word => /^[A-ZÅÄÖ]+$/.test(word));
-
-  console.log("Antal giltiga ord:", words.length);
+    .map(w => w.trim().split("/")[0])
+    .map(w => w.toUpperCase())
+    .filter(w => w.length === 5)
+    .filter(w => /^[A-ZÅÄÖ]+$/.test(w));
 
   newGame();
 }
 
-function createBoard(){
+function randomWord() {
+  return words[
+    Math.floor(Math.random() * words.length)
+  ];
+}
 
-  board.innerHTML="";
+function createBoard() {
+  board.innerHTML = "";
 
-  for(let i=0;i<25;i++){
-
-    const tile =
-      document.createElement("div");
-
-    tile.className="tile";
-
+  for (let i = 0; i < maxRows * 5; i++) {
+    const tile = document.createElement("div");
+    tile.className = "tile";
     board.appendChild(tile);
   }
 }
 
-function newGame(){
+function createKeyboard() {
+  keyboard.innerHTML = "";
 
-  targetWord =
-    words[
-      Math.floor(
-        Math.random() * words.length
-      )
-    ];
+  keyboardLayout.forEach(row => {
+    const rowDiv = document.createElement("div");
+    rowDiv.className = "keyboard-row";
 
-  currentRow = 0;
+    row.forEach(letter => {
+      const btn = document.createElement("button");
+      btn.className = "key";
+      btn.textContent = letter;
 
-  createBoard();
+      if(letter === "⌫"){
+        btn.classList.add("wide");
+      }
 
-  input.disabled = false;
-  input.value = "";
-  input.focus();
+      btn.onclick = () => handleKey(letter);
 
-  showMessage("");
+      btn.id = "key-" + letter;
 
-  renderStats();
+      rowDiv.appendChild(btn);
+    });
+
+    keyboard.appendChild(rowDiv);
+  });
+}
+
+function handleKey(letter){
+
+  if(letter === "⌫"){
+
+    if(currentGuess.length > 0){
+      currentGuess.pop();
+      renderCurrentGuess();
+    }
+
+    if(invalidWord){
+      invalidWord = false;
+      guessBtn.textContent = "GISSA";
+      guessBtn.style.background = "#538d4e";
+    }
+
+    return;
+  }
+
+  if(currentGuess.length >= 5)
+    return;
+
+  currentGuess.push(letter);
+
+  renderCurrentGuess();
+}
+
+function renderCurrentGuess(){
+  for(let i=0;i<5;i++){
+
+    const tile =
+      board.children[currentRow*5+i];
+
+    tile.textContent =
+      currentGuess[i] || "";
+  }
 }
 
 function scoreGuess(guess,target){
 
-  const result =
-    Array(5).fill("absent");
-
-  const remaining =
-    target.split("");
+  const result = Array(5).fill("absent");
+  const remaining = target.split("");
 
   for(let i=0;i<5;i++){
     if(guess[i]===target[i]){
@@ -118,18 +142,80 @@ function scoreGuess(guess,target){
   return result;
 }
 
+function updateKeyboard(guess,result){
+
+  for(let i=0;i<5;i++){
+
+    const key =
+      document.getElementById(
+        "key-" + guess[i]
+      );
+
+    if(!key) continue;
+
+    if(
+      result[i] === "correct"
+    ){
+      key.classList.remove(
+        "present",
+        "absent"
+      );
+
+      key.classList.add(
+        "correct"
+      );
+    }
+
+    else if(
+      result[i] === "present" &&
+      !key.classList.contains(
+        "correct"
+      )
+    ){
+      key.classList.remove(
+        "absent"
+      );
+
+      key.classList.add(
+        "present"
+      );
+    }
+
+    else if(
+      result[i] === "absent" &&
+      !key.classList.contains(
+        "correct"
+      ) &&
+      !key.classList.contains(
+        "present"
+      )
+    ){
+      key.classList.add(
+        "absent"
+      );
+    }
+  }
+}
+
 function submitGuess(){
 
-  if(input.disabled) return;
-
   const guess =
-    input.value
-      .trim()
-      .toUpperCase();
+    currentGuess.join("");
 
-  if(guess.length!==5){
-    showMessage("Skriv 5 bokstäver");
+  if(guess.length !== 5){
     return;
+  }
+
+  if(!words.includes(guess)){
+    invalidWord = true;
+
+guessBtn.textContent =
+  "INTE ETT ORD";
+
+guessBtn.style.background =
+  "#b00020";
+
+return;
   }
 
   const result =
@@ -140,9 +226,10 @@ function submitGuess(){
     const tile =
       board.children[currentRow*5+i];
 
-    tile.textContent = guess[i];
     tile.classList.add(result[i]);
   }
+
+  updateKeyboard(guess,result);
 
   if(guess===targetWord){
 
@@ -154,20 +241,17 @@ function submitGuess(){
 
     renderStats();
 
-    showMessage(
-      "🎉 Rätt! Klicka på Spela igen"
-    );
-
-    input.disabled = true;
-
+    showMessage("🎉 Rätt!");
+    guessBtn.disabled = true;
     return;
   }
 
   currentRow++;
+  currentGuess = [];
 
   if(currentRow===maxRows){
 
-    streak = 0;
+    streak=0;
 
     localStorage.setItem(
       "streak",
@@ -180,26 +264,54 @@ function submitGuess(){
       "❌ Ordet var: " + targetWord
     );
 
-    input.disabled = true;
+    guessBtn.disabled = true;
   }
+}
 
-  input.value = "";
+function newGame(){
+
+  targetWord = randomWord();
+
+  currentRow = 0;
+  currentGuess = [];
+
+  guessBtn.disabled = false;
+
+  createBoard();
+  createKeyboard();
+
+  showMessage("");
+
+  renderStats();
 }
 
 function renderStats(){
-
-  document.getElementById(
-    "stats"
-  ).innerHTML =
-    "🔥 Vinstsvit: <strong>"
-    + streak +
+  document.getElementById("stats")
+    .innerHTML =
+    "🔥 Aktuell streak: <strong>" +
+    streak +
     "</strong>";
 }
 
 function showMessage(text){
-  document.getElementById(
-    "message"
-  ).textContent = text;
+  document.getElementById("message")
+    .textContent = text;
 }
 
+guessBtn.addEventListener(
+  "click",
+  submitGuess
+);
+
 loadWords();
+function showHelp() {
+  document.getElementById("helpModal").style.display = "flex";
+}
+
+function closeHelp() {
+  document.getElementById("helpModal").style.display = "none";
+}
+
+window.addEventListener("load", () => {
+  showHelp();
+});
