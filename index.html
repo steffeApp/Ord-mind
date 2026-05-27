@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ordspel</title>
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
+
+  <style>
+    body{
+      background:#121213;
+      color:white;
+      font-family:Arial,sans-serif;
+      text-align:center;
+      margin:0;
+      padding:20px;
+    }
+
+    #board{
+      display:grid;
+      grid-template-columns:repeat(5,60px);
+      gap:6px;
+      justify-content:center;
+      margin:20px auto;
+    }
+
+    .tile{
+      width:60px;
+      height:60px;
+      border:2px solid #3a3a3c;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:28px;
+      font-weight:bold;
+      text-transform:uppercase;
+    }
+
+    .correct{ background:#538d4e; }
+    .present{ background:#b59f3b; }
+    .absent{ background:#3a3a3c; }
+
+    input{
+      font-size:22px;
+      padding:10px;
+      width:180px;
+      text-align:center;
+      text-transform:uppercase;
+    }
+
+    button{
+      font-size:18px;
+      padding:10px 18px;
+      margin:5px;
+      cursor:pointer;
+    }
+
+    #stats{
+      margin-bottom:15px;
+    }
+
+    #message{
+      margin-top:20px;
+      font-size:20px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Ordspel</h1>
+
+<div id="stats"></div>
+<div id="board"></div>
+
+<input id="guessInput" maxlength="5">
+<button id="guessBtn">Gissa</button>
+<button id="newBtn">Spela igen</button>
+
+<div id="message"></div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
