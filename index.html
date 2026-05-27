@@ -2,205 +2,251 @@
 <html lang="sv">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
   <title>Ordspel</title>
 
   <link rel="icon" type="image/png" href="./icon-180.png?v=3">
   <link rel="apple-touch-icon" sizes="180x180" href="./icon-180.png?v=3">
 
   <style>
-body{
-  margin:0;
-  padding:6px 6px 12px;
-  background:#121213;
-  color:white;
-  font-family:Arial,sans-serif;
-  text-align:center;
-  overflow:hidden;
+/* PREMIUM APP LAYOUT */
+body {
+  margin: 0;
+  padding: 0;
+  background: #121213;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  text-align: center;
+  overflow: hidden;
   touch-action: none; 
-  -webkit-text-size-adjust:100%;
+  -webkit-text-size-adjust: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: space-between;
+  box-sizing: border-box;
 }
 
-h1{
-  margin:5px 0 2px;
-  font-size:26px;
+/* TOPPMENY */
+.top-container {
+  flex: 0 0 auto;
+  width: 100%;
 }
 
-#stats{
-  margin-bottom:6px;
-  font-size:16px;
-  font-weight:bold;
+h1 {
+  margin: 0;
+  padding: 12px 0 8px;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border-bottom: 1px solid #3a3a3c;
 }
 
-/* FIX: Mindre rutor för att spara vertikal plats */
-#board{
-  display:grid;
-  grid-template-columns:repeat(5, min(13vw, 46px));
-  gap:5px;
-  justify-content:center;
-  margin:8px auto;
+#stats {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: #b8b8b8;
+  letter-spacing: 0.5px;
 }
 
-.tile{
-  width:min(13vw, 46px);
-  height:min(13vw, 46px);
-  border:2px solid #3a3a3c;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:22px;
-  font-weight:bold;
-  text-transform:uppercase;
-  border-radius:5px;
-  box-sizing:border-box;
+/* SPELPLAN (MITTENPLATS) */
+.main-container {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
 }
 
-.correct{
-  background:#538d4e;
-  border-color:#538d4e;
-  color:white;
+/* FIX: Bredare spelplan som efterliknar originalet */
+#board {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  width: 88vw;
+  max-width: 340px; 
 }
 
-.present{
-  background:#b59f3b;
-  border-color:#b59f3b;
-  color:white;
+/* FIX: Perfekt kvadratiska rutor med gigantiska bokstäver */
+.tile {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: 2px solid #3a3a3c;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px; 
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
-.absent{
-  background:#3a3a3c;
-  border-color:#3a3a3c;
-  color:white;
+.correct {
+  background: #538d4e;
+  border-color: #538d4e;
+  color: white;
 }
 
-/* FIX: Tangentbordet tar nu 100% av tillgänglig bredd */
-#keyboard{
-  width:100%;
-  max-width:500px;
-  margin:12px auto 4px;
-  padding:0 4px;
-  box-sizing:border-box;
+.present {
+  background: #b59f3b;
+  border-color: #b59f3b;
+  color: white;
 }
 
-.keyboard-row{
-  display:flex;
-  justify-content:center;
-  gap:4px;
-  margin-bottom:6px;
-  width:100%;
+.absent {
+  background: #3a3a3c;
+  border-color: #3a3a3c;
+  color: white;
 }
 
-/* FIX: Flex gör att knapparna blir så breda som skärmen tillåter. Höjden är ökad till 56px. */
-.key{
-  flex:1;
-  height:56px; 
-  border:none;
-  border-radius:5px;
-  background:#818384;
-  color:white;
-  font-size:18px;
-  font-weight:bold;
-  padding:0;
+#message {
+  margin-top: 14px;
+  min-height: 20px;
+  font-size: 15px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+/* TANGENTBORD & KNAPPAR (BOTTENPLATS) */
+.bottom-container {
+  flex: 0 0 auto;
+  width: 100%;
+  padding-bottom: env(safe-area-inset-bottom, 12px); /* Skyddar mot hem-strecket på iOS */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#keyboard {
+  width: 100%;
+  max-width: 480px;
+  padding: 0 8px;
+  box-sizing: border-box;
+}
+
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 6px;
+  width: 100%;
+}
+
+/* FIX: Högre, skönare tangenter som utnyttjar skärmbredden */
+.key {
+  flex: 1;
+  height: 58px; 
+  border: none;
+  border-radius: 4px;
+  background: #818384;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   -webkit-user-select: none; 
   user-select: none;
-  min-width:0; 
+  min-width: 0; 
 }
 
-/* Backstegsknappen får lite extra bredd proportionellt */
-.key.wide{
-  flex:1.5;
+.key.wide {
+  flex: 1.5;
 }
 
-.key.correct{
-  background:#538d4e !important;
+.key.correct {
+  background: #538d4e !important;
 }
 
-.key.present{
-  background:#b59f3b !important;
+.key.present {
+  background: #b59f3b !important;
 }
 
-.key.absent{
-  background:#3a3a3c !important;
+.key.absent {
+  background: #3a3a3c !important;
 }
 
-#guessBtn{
-  margin-top:8px;
-  margin-bottom:4px;
-  border:none;
-  background:#538d4e;
-  color:white;
-  padding:12px 32px;
-  font-size:18px;
-  font-weight:bold;
-  border-radius:8px;
+/* Snygg, modern gissa-knapp */
+#guessBtn {
+  margin: 6px 0 8px;
+  border: none;
+  background: #538d4e;
+  color: white;
+  padding: 12px 45px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 25px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
   -webkit-user-select: none;
   user-select: none;
 }
 
-#message{
-  margin-top:6px;
-  min-height:22px;
-  font-size:16px;
-  font-weight:bold;
+/* HJÄLPMENY */
+#helpModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.85);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
 }
 
-#helpModal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.82);
-  display:none;
-  justify-content:center;
-  align-items:center;
-  z-index:999;
+#helpBox {
+  background: #1f1f1f;
+  color: white;
+  max-width: 320px;
+  padding: 24px;
+  border-radius: 14px;
+  text-align: center;
 }
 
-#helpBox{
-  background:#1f1f1f;
-  color:white;
-  max-width:320px;
-  padding:24px;
-  border-radius:14px;
-  text-align:center;
-}
-
-#helpBox button{
-  margin-top:16px;
-  background:#538d4e;
-  border:none;
-  color:white;
-  padding:12px 18px;
-  border-radius:8px;
+#helpBox button {
+  margin-top: 16px;
+  background: #538d4e;
+  border: none;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 8px;
 }
 </style>
 </head>
 <body>
 
-  <h1>Ordspel</h1>
-
-  <div id="stats"></div>
-
-  <div id="board"></div>
-
-  <div id="keyboard"></div>
-
-  <button id="guessBtn">GISSA</button>
-
-  <div id="message"></div>
-
-<div id="helpModal">
-  <div id="helpBox">
-    <h2>Så spelar du</h2>
-    <p>🎯 Gissa ordet på <strong>5 bokstäver</strong></p>
-    <p>Du har <strong>6 försök</strong>.</p>
-    <p>Efter varje gissning får bokstäverna färg:</p>
-    <p>🟩 = rätt bokstav på rätt plats</p>
-    <p>🟨 = rätt bokstav men på fel plats</p>
-    <p>⬛ = bokstaven finns inte i ordet</p>
-    <button onclick="closeHelp()">Jag fattar 👍</button>
+  <div class="top-container">
+    <h1>Ordspel</h1>
+    <div id="stats"></div>
   </div>
-</div>
 
-  <script src="script.js?v=3"></script>
+  <div class="main-container">
+    <div id="board"></div>
+    <div id="message"></div>
+  </div>
+
+  <div class="bottom-container">
+    <div id="keyboard"></div>
+    <button id="guessBtn">GISSA</button>
+  </div>
+
+  <div id="helpModal">
+    <div id="helpBox">
+      <h2>Så spelar du</h2>
+      <p>🎯 Gissa ordet på <strong>5 bokstäver</strong></p>
+      <p>Du har <strong>6 försök</strong>.</p>
+      <p>Efter varje gissning får bokstäverna färg:</p>
+      <p>🟩 = rätt bokstav på rätt plats</p>
+      <p>🟨 = rätt bokstav men på fel plats</p>
+      <p>⬛ = bokstaven finns inte i ordet</p>
+      <button onclick="closeHelp()">Jag fattar 👍</button>
+    </div>
+  </div>
+
+  <script src="script.js?v=5"></script>
 
 </body>
 </html>
