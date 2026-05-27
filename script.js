@@ -65,10 +65,11 @@ function createKeyboard() {
         btn.classList.add("wide");
       }
 
+      // FIX: Använder pointerdown för omedelbar respons utan iOS-blockering
       btn.addEventListener("pointerdown", (e) => {
-  e.preventDefault(); // Hindrar iOS från att tolka snabba tryck som en gest eller svälja klicket
-  handleKey(letter);
-});
+        e.preventDefault();
+        handleKey(letter);
+      });
 
       btn.id = "key-" + letter;
 
@@ -212,13 +213,13 @@ function submitGuess(){
   if(!words.includes(guess)){
     invalidWord = true;
 
-guessBtn.textContent =
-  "INTE ETT ORD";
+    guessBtn.textContent =
+      "INTE ETT ORD";
 
-guessBtn.style.background =
-  "#b00020";
+    guessBtn.style.background =
+      "#b00020";
 
-return;
+    return;
   }
 
   const result =
@@ -301,12 +302,14 @@ function showMessage(text){
     .textContent = text;
 }
 
-guessBtn.addEventListener(
-  "click",
-  submitGuess
-);
+// FIX: Använder pointerdown även här för direktrespons på gissa-knappen
+guessBtn.addEventListener("pointerdown", (e) => {
+  e.preventDefault();
+  submitGuess();
+});
 
 loadWords();
+
 function showHelp() {
   document.getElementById("helpModal").style.display = "flex";
 }
@@ -318,6 +321,5 @@ function closeHelp() {
 window.addEventListener("load", () => {
   showHelp();
 });
-document.addEventListener('gesturestart', function (e) {
-  e.preventDefault();
-});
+
+// FIX: Den gamla trasiga touchstart-lyssnaren är helt borttagen härifrån!
