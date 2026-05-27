@@ -2,7 +2,7 @@
 <html lang="sv">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Ordspel</title>
 
   <link rel="icon" type="image/png" href="./icon-180.png?v=3">
@@ -16,8 +16,8 @@ body{
   color:white;
   font-family:Arial,sans-serif;
   text-align:center;
-  overflow: hidden;
-  touch-action: none;
+  overflow:hidden;
+  touch-action: none; /* Stänger av alla webbläsargester på hela sidan */
   -webkit-text-size-adjust:100%;
 }
 
@@ -94,6 +94,9 @@ h1{
   font-size:18px;
   font-weight:bold;
   padding:0 6px;
+  /* FIX: Hindrar iOS från att markera text/frysa knappen vid snabba tryck */
+  -webkit-user-select: none; 
+  user-select: none;
 }
 
 .key.wide{
@@ -122,6 +125,9 @@ h1{
   font-size:18px;
   font-weight:bold;
   border-radius:8px;
+  /* FIX: Samma här för gissa-knappen */
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 #message{
@@ -189,7 +195,7 @@ h1{
     <button onclick="closeHelp()">Jag fattar 👍</button>
   </div>
 </div>
-  <script src="script.js"></script>
+  <script src="script.js?v=2"></script>
 
 </body>
 </html>
