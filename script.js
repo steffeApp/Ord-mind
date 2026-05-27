@@ -315,18 +315,18 @@ function closeHelp() {
 window.addEventListener("load", () => {
   showHelp();
 });
-let lastTouchEnd = 0;
+let lastTouchTime = 0;
 
 document.addEventListener(
-  "touchend",
-  function (event) {
+  "touchstart",
+  function (e) {
     const now = Date.now();
 
-    if (now - lastTouchEnd <= 300) {
-      event.preventDefault();
+    if (now - lastTouchTime < 350) {
+      e.preventDefault();
     }
 
-    lastTouchEnd = now;
+    lastTouchTime = now;
   },
   { passive: false }
 );
