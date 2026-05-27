@@ -315,18 +315,6 @@ function closeHelp() {
 window.addEventListener("load", () => {
   showHelp();
 });
-let lastTouchTime = 0;
-
-document.addEventListener(
-  "touchstart",
-  function (e) {
-    const now = Date.now();
-
-    if (now - lastTouchTime < 350) {
-      e.preventDefault();
-    }
-
-    lastTouchTime = now;
-  },
-  { passive: false }
-);
+document.addEventListener('gesturestart', function (e) {
+  e.preventDefault();
+});
