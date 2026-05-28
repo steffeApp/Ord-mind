@@ -104,8 +104,9 @@ h1{
 
 #keyboard{
   width:100%;
-  max-width:520px;
-  margin:0 auto;
+  max-width:100vw;
+  padding:0 8px;
+  box-sizing:border-box;
 }
 
 .keyboard-row{
@@ -113,10 +114,13 @@ h1{
   justify-content:center;
   gap:6px;
   margin-bottom:6px;
+  width:100%;
 }
 
 .key{
-  width:42px;
+  flex:1;
+  min-width:0;
+  max-width:42px;
   height:52px;
   border:none;
   border-radius:10px;
@@ -124,7 +128,11 @@ h1{
   color:white;
   font-size:20px;
   font-weight:700;
-  flex:none;
+  box-sizing:border-box;
+
+  -webkit-user-select:none;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
 }
 
 .key.wide{
