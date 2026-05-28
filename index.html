@@ -60,24 +60,24 @@ h1 {
   padding: 10px 0;
 }
 
-/* FIX: Bredare spelplan som efterliknar originalet */
+/* FIX: Sätter fasta, responsiva proportioner på kolumner OCH rader för att krossa Safari-buggen */
 #board {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, min(16vw, 62px));
+  grid-auto-rows: min(16vw, 62px);
   gap: 6px;
-  width: 88vw;
-  max-width: 340px; 
+  justify-content: center;
 }
 
-/* FIX: Perfekt kvadratiska rutor med gigantiska bokstäver */
+/* FIX: Rutorna blir nu garanterat kvadratiska och bokstäverna är stora och kaxiga */
 .tile {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  height: 100%;
   border: 2px solid #3a3a3c;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 30px; 
+  font-size: 28px; 
   font-weight: 700;
   text-transform: uppercase;
   border-radius: 4px;
@@ -114,7 +114,7 @@ h1 {
 .bottom-container {
   flex: 0 0 auto;
   width: 100%;
-  padding-bottom: env(safe-area-inset-bottom, 12px); /* Skyddar mot hem-strecket på iOS */
+  padding-bottom: env(safe-area-inset-bottom, 12px); 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -135,7 +135,6 @@ h1 {
   width: 100%;
 }
 
-/* FIX: Högre, skönare tangenter som utnyttjar skärmbredden */
 .key {
   flex: 1;
   height: 58px; 
@@ -169,7 +168,6 @@ h1 {
   background: #3a3a3c !important;
 }
 
-/* Snygg, modern gissa-knapp */
 #guessBtn {
   margin: 6px 0 8px;
   border: none;
