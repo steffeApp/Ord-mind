@@ -65,11 +65,11 @@ function createKeyboard() {
         btn.classList.add("wide");
       }
 
-      // FIX: Använder pointerdown för omedelbar respons utan iOS-blockering
-      btn.addEventListener("pointerdown", (e) => {
-        e.preventDefault();
+      // SKURK-DÖDAREN: touchstart tvingar iOS att ge vika omedelbart vid tryck
+      btn.addEventListener("touchstart", (e) => {
+        e.preventDefault(); 
         handleKey(letter);
-      });
+      }, { passive: false });
 
       btn.id = "key-" + letter;
 
@@ -302,11 +302,11 @@ function showMessage(text){
     .textContent = text;
 }
 
-// FIX: Använder pointerdown även här för direktrespons på gissa-knappen
-guessBtn.addEventListener("pointerdown", (e) => {
+// Blixtsnabb respons på Gissa-knappen också
+guessBtn.addEventListener("touchstart", (e) => {
   e.preventDefault();
   submitGuess();
-});
+}, { passive: false });
 
 loadWords();
 
@@ -321,5 +321,3 @@ function closeHelp() {
 window.addEventListener("load", () => {
   showHelp();
 });
-
-// FIX: Den gamla trasiga touchstart-lyssnaren är helt borttagen härifrån!
